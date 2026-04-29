@@ -93,6 +93,26 @@ const [formData, setFormData] = useState<FormData>({
   const nextStep = () => setStep((s) => Math.min(s + 1, 5));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
+  const calculateCost = () => {
+    const superficie = parseFloat(formData.superficie) || 0;
+    const niveles = parseFloat(formData.niveles) || 1;
+    const areasVerdes = formData.areasVerdes ? 1.2 : 1;
+
+    const tipoPropiedadPrice = TIPOS_PROPIEDAD.find((t) => t.id === formData.tipoPropiedad)?.price || 1;
+    const tipoPlagaPrice = TIPOS_PLAGA.find((t) => t.id === formData.tipoPlaga)?.price || 1;
+    const nivelPrice = NIVELES_INFESTACION.find((n) => n.id === formData.nivelInfestacion)?.price || 1;
+    const frecuenciaPrice = FRECUENCIAS.find((f) => f.id === formData.frecuencia)?.price || 1;
+    const horarioPrice = HORARIOS.find((h) => h.id === formData.horario)?.price || 1;
+    const productoPrice = PRODUCTOS.find((p) => p.id === formData.producto)?.price || 1;
+
+    const basePrice = 350;
+    const m2Price = 15;
+    const totalM2 = superficie * m2Price * niveles * tipoPropiedadPrice * areasVerdes;
+    const multiplier = tipoPlagaPrice * nivelPrice * frecuenciaPrice * horarioPrice * productoPrice;
+    
+    return Math.round(totalM2 * multiplier + basePrice);
+  };
+
   const estimatedCost = calculateCost();
 
   const renderStep1 = () => (
@@ -330,46 +350,6 @@ const [formData, setFormData] = useState<FormData>({
       `Gracias por tu interés. Te cotizamos $${estimatedCost} MXN.\n\nNos pondremos en contacto contigo pronto.`,
       [{ text: 'OK', onPress: () => setStep(1) }]
     );
-  };
-
-  const calculateCost = () => {
-    const superficie = parseFloat(formData.superficie) || 0;
-    const niveles = parseFloat(formData.niveles) || 1;
-    const areasVerdes = formData.areasVerdes ? 1.2 : 1;
-
-    const tipoPropiedadPrice = TIPOS_PROPIEDAD.find((t) => t.id === formData.tipoPropiedad)?.price || 1;
-    const tipoPlagaPrice = TIPOS_PLAGA.find((t) => t.id === formData.tipoPlaga)?.price || 1;
-    const nivelPrice = NIVELES_INFESTACION.find((n) => n.id === formData.nivelInfestacion)?.price || 1;
-    const frecuenciaPrice = FRECUENCIAS.find((f) => f.id === formData.frecuencia)?.price || 1;
-    const horarioPrice = HORARIOS.find((h) => h.id === formData.horario)?.price || 1;
-    const productoPrice = PRODUCTOS.find((p) => p.id === formData.producto)?.price || 1;
-
-    const basePrice = 350;
-    const m2Price = 15;
-    const totalM2 = superficie * m2Price * niveles * tipoPropiedadPrice * areasVerdes;
-    const multiplier = tipoPlagaPrice * nivelPrice * frecuenciaPrice * horarioPrice * productoPrice;
-    
-    return Math.round(totalM2 * multiplier + basePrice);
-  };
-
-  const calculateCost = () => {
-    const superficie = parseFloat(formData.superficie) || 0;
-    const niveles = parseFloat(formData.niveles) || 1;
-    const areasVerdes = formData.areasVerdes ? 1.2 : 1;
-
-    const tipoPropiedadPrice = TIPOS_PROPIEDAD.find((t) => t.id === formData.tipoPropiedad)?.price || 1;
-    const tipoPlagaPrice = TIPOS_PLAGA.find((t) => t.id === formData.tipoPlaga)?.price || 1;
-    const nivelPrice = NIVELES_INFESTACION.find((n) => n.id === formData.nivelInfestacion)?.price || 1;
-    const frecuenciaPrice = FRECUENCIAS.find((f) => f.id === formData.frecuencia)?.price || 1;
-    const horarioPrice = HORARIOS.find((h) => h.id === formData.horario)?.price || 1;
-    const productoPrice = PRODUCTOS.find((p) => p.id === formData.producto)?.price || 1;
-
-    const basePrice = 350;
-    const m2Price = 15;
-    const totalM2 = superficie * m2Price * niveles * tipoPropiedadPrice * areasVerdes;
-    const multiplier = tipoPlagaPrice * nivelPrice * frecuenciaPrice * horarioPrice * productoPrice;
-    
-    return Math.round(totalM2 * multiplier + basePrice);
   };
 
   const renderResumen = () => {
